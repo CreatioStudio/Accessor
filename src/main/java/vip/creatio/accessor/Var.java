@@ -68,7 +68,7 @@ public abstract class Var<R> {
         setByte(null, value);
     }
     public abstract void setByte(Object member, byte value);
-    public void setIntAtomic(byte value) {
+    public void setByteAtomic(byte value) {
         setByteAtomic(null, value);
     }
     public abstract void setByteAtomic(Object member, byte value);
