@@ -1,6 +1,6 @@
 package vip.creatio.accessor;
 
-import vip.creatio.common.Pair;
+import vip.creatio.common.collection.Pair;
 import vip.creatio.accessor.annotation.AnnotationProcessor;
 
 import java.io.File;

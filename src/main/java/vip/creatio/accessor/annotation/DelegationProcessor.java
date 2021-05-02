@@ -1,6 +1,6 @@
 package vip.creatio.accessor.annotation;
 
-import vip.creatio.common.ReflectionException;
+import vip.creatio.common.util.ReflectionException;
 import vip.creatio.accessor.DelegationType;
 import vip.creatio.accessor.Func;
 import vip.creatio.accessor.Reflection;

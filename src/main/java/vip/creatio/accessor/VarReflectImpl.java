@@ -1,6 +1,6 @@
 package vip.creatio.accessor;
 
-import vip.creatio.common.ReflectionException;
+import vip.creatio.common.util.ReflectionException;
 
 class VarReflectImpl<R> extends Var<R> {
 
