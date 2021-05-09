@@ -1,11 +1,11 @@
 package vip.creatio.accessor;
 
-import vip.creatio.common.collection.Pair;
 import vip.creatio.accessor.annotation.AnnotationProcessor;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
@@ -29,6 +29,7 @@ public class ReflectiveClassLoader extends URLClassLoader {
 
     public static final String ACCESSOR_GLOBAL = "vip.creatio.accessor.global";
     public static final String ACCESSOR_ROOT = "vip.creatio.accessor";
+    public static final String COMMON_ROOT = "vip.creatio.common";
 
     private final Map<byte[], byte[]> bytecodeReplacement = new HashMap<>();
 
@@ -39,6 +40,7 @@ public class ReflectiveClassLoader extends URLClassLoader {
 
     /** Class under this package will be load by parent class loader */
     private final Set<String> excludePackages = new HashSet<>();
+    {excludePackages.add(COMMON_ROOT);}
 
     /** Class under this package will be processed by this class loader and defined by bootloader */
     private final Set<String> globalPackages = new HashSet<>();
@@ -135,7 +137,7 @@ public class ReflectiveClassLoader extends URLClassLoader {
         excludePackages.add(pkg);
     }
 
-    protected final synchronized boolean addProcessor(AnnotationProcessor<?> processor) {
+    public final synchronized boolean addProcessor(AnnotationProcessor<?> processor) {
         Class<? extends Annotation> annotation = processor.getTargetClass();
         Target target = annotation.getAnnotation(Target.class);
 
@@ -155,6 +157,8 @@ public class ReflectiveClassLoader extends URLClassLoader {
                 flag = true;
             }
         }
+
+        processor.onRegister(this);
 
         return  flag;
     }
@@ -458,7 +462,13 @@ public class ReflectiveClassLoader extends URLClassLoader {
         processors.addAll(constructorProcessor);
         processors.addAll(fieldProcessor);
 
-        processors.forEach(s -> s.onProcessEnd(cls));
+        processors.forEach(s -> {
+            try {
+                s.onProcessEnd(cls);
+            } catch (Throwable t) {
+                System.out.println("[CreatioAccessor] Exception generated while end annotation processor " + s);
+            }
+        });
     }
 
 
@@ -740,6 +750,31 @@ public class ReflectiveClassLoader extends URLClassLoader {
     public void close() throws IOException {
         super.close();
         jar.close();
+    }
+
+    private static class Pair<K, V> implements Serializable, Map.Entry<K, V> {
+
+        private final K key;
+        private final V value;
+
+        Pair(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public K getKey() {
+            return key;
+        }
+
+        @Override
+        public V getValue() {
+            return value;
+        }
+
+        @Override
+        public V setValue(V value) {
+            throw new UnsupportedOperationException("Immutable Map.Entry implementation!");
+        }
     }
 }
 

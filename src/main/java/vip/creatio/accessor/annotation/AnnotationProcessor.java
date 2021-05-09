@@ -1,5 +1,7 @@
 package vip.creatio.accessor.annotation;
 
+import vip.creatio.accessor.ReflectiveClassLoader;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -18,4 +20,6 @@ public interface AnnotationProcessor<T extends Annotation> {
     default void process(T instance, Class<?> c) {}
 
     default void onProcessEnd(Class<?> c) {}
+
+    default void onRegister(ReflectiveClassLoader classLoader) {}
 }

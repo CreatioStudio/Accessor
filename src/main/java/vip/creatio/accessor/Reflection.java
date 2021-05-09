@@ -60,34 +60,15 @@ public final class Reflection {
     private static final Method CLASS_GET_CONSTRUCTORS = ReflectUtil.method(Class.class, "privateGetDeclaredConstructors", boolean.class);
 
     public static Method[] getMethods(Class<?> cls, boolean publicOnly) {
-        try {
-            return (Method[]) CLASS_GET_METHODS.invoke(cls, publicOnly);
-        } catch (IllegalAccessException e) {
-            throw new ReflectionException(e);
-        } catch (InvocationTargetException e) {
-            throw new ReflectionException(e.getTargetException());
-        }
+        return ReflectUtil.invoke(CLASS_GET_METHODS, cls, publicOnly);
     }
 
     public static Field[] getFields(Class<?> cls, boolean publicOnly) {
-        try {
-            return (Field[]) CLASS_GET_FIELDS.invoke(cls, publicOnly);
-        } catch (IllegalAccessException e) {
-            throw new ReflectionException(e);
-        } catch (InvocationTargetException e) {
-            throw new ReflectionException(e.getTargetException());
-        }
+        return ReflectUtil.invoke(CLASS_GET_FIELDS, cls, publicOnly);
     }
 
-    @SuppressWarnings("unchecked")
     public static <T> Constructor<T>[] getConstructors(Class<T> cls, boolean publicOnly) {
-        try {
-            return (Constructor<T>[]) CLASS_GET_CONSTRUCTORS.invoke(cls, publicOnly);
-        } catch (IllegalAccessException e) {
-            throw new ReflectionException(e);
-        } catch (InvocationTargetException e) {
-            throw new ReflectionException(e.getTargetException());
-        }
+        return ReflectUtil.invoke(CLASS_GET_CONSTRUCTORS, cls, publicOnly);
     }
 
 

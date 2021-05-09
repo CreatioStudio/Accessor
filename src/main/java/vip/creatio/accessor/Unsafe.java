@@ -1030,7 +1030,7 @@ public class Unsafe {
      * Allocates an instance but does not run any constructor.
      * Initializes the class if it has not yet been.
      */
-    public Object allocateInstance(Class<?> cls) throws InstantiationException {
+    public Object allocateInstance(Class<?> cls) {
         return _allocateInstance.invoke(jdkUnsafe, cls);
     }
     private static final IFunctionObj<Object> _allocateInstance =
